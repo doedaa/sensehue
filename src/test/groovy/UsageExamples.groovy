@@ -16,7 +16,7 @@ import de.jaetzold.philips.hue.HueLight
 import de.jaetzold.philips.hue.HueLightBulb
 import de.jaetzold.philips.hue.HueLightGroup
 import de.jaetzold.philips.hue.HueVirtualLightGroup
-
+import java.net.InetAddress
 /**
  * A simple Demo/Test script for the philips-hue-java-sdk
  *
@@ -34,14 +34,29 @@ import de.jaetzold.philips.hue.HueVirtualLightGroup
  * <p><small>Created at 15.03.13, 16:23</small>
  */
 
-/* Discover and connect to a hue bridge. May be necessary to press the button on the bridge the first time this is used. */
+/* Discover and connect to a hue bridge. May be necessary to press the button on the bridge the first time this is used. 
 List<HueBridge> bridges = discoverAndAuthenticate()
 
 if(bridges.isEmpty()) {
     println("No bridge found.")
     System.exit(1)
 }
-HueBridge bridge = bridges.get(0)
+HueBridge bridge = bridges.get(0)*/
+
+def address = InetAddress.getByName("192.168.1.72");
+def bridge = new HueBridge(address,'8aefa072a354a7f113f6bf72b173e6f')
+if(!bridge.authenticate(false)) {
+				println("Press the button on your Hue bridge in the next 30 seconds to grant access.")
+				if(bridge.authenticate(true)) {
+					println("Access granted. username: " + bridge.username)
+				} else {
+					println("Authentication failed.")
+				}
+			} else {
+				println("Already granted access. username: " + bridge.username)
+			}
+
+def bridges = [bridge]
 
 /* Query for all lights on the bridge */
 listLights(bridge)
@@ -49,14 +64,17 @@ listLights(bridge)
 listGroups(bridge)
 
 /* Change bridge state */
-bridge.setName("Jaetzold's Hue")
+bridge.setName("Joris")
 println("After changing name: " +bridge)
 
 if(bridge.lights.isEmpty()) {
     println("No lights found.")
     System.exit(2)
 }
-HueLightBulb light = bridge.getLight(bridge.lightIds[0])
+
+def lights = bridge.getLights()
+lights.each{println it}
+HueLightBulb light = lights[0]
 
 /* Change various light states */
 light.on = true;

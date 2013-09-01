@@ -79,7 +79,7 @@ public class HueBridge {
 	 * If {@link #discover()} should return quicker if there are no bridges found, set this to a lower value.
 	 * Might not find existing bridges then if the network is very slow. 1-4 is acceptable.
 	 */
-	public static int discoveryAttempts = 3;
+	public static int discoveryAttempts = 10;
 
 	/**
 	 * Do a UPnP search for Philips hue bridges on the local network.
